@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote of the Day</title>
+  <style>
+  h1 {
+      font-style: italic; /* Apply italic style to the title */
+    }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    #app {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    #search-container {
+      display: flex;
+      justify-content: center;         /* flex-end */
+      margin-bottom: 10px;
+    }
+
+    #search-input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-right: 10px;
+      width: 200px;
+    }
+
+    #search-btn {
+      padding: 8px 16px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #quote-container {
+      background-color: #ffff99;  /* Yellow color */
+      background-size: cover; /* Cover the entire container */
+      background-position: center;
+      padding: 30px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+     width: 15cm; /* Width of 15 centimeters */
+     height: 4cm; /* Height of 5 centimeters */
+     margin: 0 auto 20px;
+    }
+
+    blockquote {
+      font-size: 18px;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    #quote-author {
+      font-weight: bold;
+    }
+
+    #refresh-btn-container {
+      display: flex;
+      justify-content: center;  /* place the button in center */
+      margin-bottom: 20px;
+    }
+
+    #refresh-btn {
+      padding: 8px 16px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<body style="background-color: orange;">
+  <div id="app">
+    <h1>Quote of the Day</h1>
+    <div id="search-container">
+      <input type="text" id="search-input" placeholder="Search by author name">
+      <button id="search-btn">Search</button>
+    </div>
+    <div id="quote-container">
+      <blockquote id="quote-text"></blockquote>
+      <p id="quote-author"></p>
+    </div>
+    <div id="refresh-btn-container">
+      <button id="refresh-btn">Refresh</button>
+    </div>
+  </div>
+
+  <script>
+    const quoteText = document.getElementById('quote-text');
+    const quoteAuthor = document.getElementById('quote-author');
+    const searchInput = document.getElementById('search-input');
+    const searchBtn = document.getElementById('search-btn');
+    const refreshBtn = document.getElementById('refresh-btn');
+
+    // Array of author names and quotes
+    const quotes = [
+      {
+        author: "Maya Angelou",
+        text: "I've learned that people will forget what you said, people will forget what you did, but people will never forget how you made them feel."
+      },
+      {
+        author: "Albert Einstein",
+        text: "Creativity is intelligence having fun."
+      },
+      {
+        author: "Nelson Mandela",
+        text: "The greatest glory in living lies not in never falling, but in rising every time we fall."
+      },
+      {
+        author: "Oprah Winfrey",
+        text: "The biggest adventure you can take is to live the life of your dreams."
+      },
+      {
+        author: "Lao Tzu",
+        text: "The journey of a thousand miles begins with a single step."
+      },
+      {
+        author: "Mark Twain",
+        text: "The secret of getting ahead is getting started."
+      },
+      {
+        author: "Winston Churchill",
+        text: "Success is not final, failure is not fatal: It is the courage to continue that counts."
+      },
+      {
+        author: "Helen Keller",
+        text: "The only thing worse than being blind is having sight but no vision."
+      },
+      {
+        author: "Aristotle",
+        text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit."
+      },
+      {
+        author: "Buddha",
+        text: "The mind is everything. What you think you become."
+      }
+    ];
+
+    let quoteIndex = 0;
+    let quoteInterval;
+    let isSearched = false;
+
+    // Fetch a random quote on page load
+    displayRandomQuote();
+
+    // Event listener for search button
+    searchBtn.addEventListener('click', handleSearch);
+
+    // Event listener for Enter key press in search input
+    searchInput.addEventListener('keyup', (event) => {
+      if (event.key === 'Enter') {
+        handleSearch();
+      }
+    });
+
+    // Event listener for refresh button
+    refreshBtn.addEventListener('click', changeQuote);
+
+    function handleSearch() {
+      const author = searchInput.value.trim();
+      if (author) {
+        const quote = quotes.find(q => q.author.toLowerCase().includes(author.toLowerCase()));
+        if (quote) {
+          displayQuote(quote);
+          isSearched = true;
+          clearInterval(quoteInterval); // Stop the automatic quote change
+        } else {
+          alert(`No quotes found for author "${author}"`);
+        }
+      }
+    }
+
+    // Display a random quote
+    function displayRandomQuote() {
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      const quote = quotes[randomIndex];
+      displayQuote(quote);
+      startQuoteInterval();
+    }
+
+    // Display the quote in the UI
+    function displayQuote(quote) {
+      quoteText.textContent = quote.text;
+      quoteAuthor.textContent = `- ${quote.author}`;
+    }
+
+    // Start the interval to change the quote every 1 minute
+    function startQuoteInterval() {
+      clearInterval(quoteInterval); // Clear any existing interval
+      quoteInterval = setInterval(() => {
+        changeQuote();
+      }, 60000); // Change quote every 1 minute (60000 milliseconds)
+    }
+
+    // Change the quote manually or by interval
+    function changeQuote() {
+      if (!isSearched) {
+        quoteIndex = (quoteIndex + 1) % quotes.length;
+        const quote = quotes[quoteIndex];
+        displayQuote(quote);
+      }
+    }
+  </script>
+</body>
+</html>
